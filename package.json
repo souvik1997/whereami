@@ -1,8 +1,0 @@
-{
-  "name": "whereami",
-  "description": "Basic webapp to show your location",
-  "main": "index.js",
-  "scripts": {
-    "build": "browserify --debug --transform reactify index.js > bundle.js"
-  },
-}

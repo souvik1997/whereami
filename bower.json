@@ -1,0 +1,23 @@
+{
+  "name": "whereami",
+  "version": "0.0.1",
+  "homepage": "https://github.com/souvik1997/whereami",
+  "authors": [
+    "Souvik Banerjee <souvik1997@gmail.com>"
+  ],
+  "description": "A simple webapp to find your location",
+  "main": "app.js",
+  "license": "AGPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "react": "~0.13.3",
+    "jquery": "~2.1.4"
+  }
+}
