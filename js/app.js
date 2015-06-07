@@ -3,10 +3,11 @@
 var BootstrapButton = React.createClass({
 	render: function() {
 		return (
-		  <a {...this.props}
-			href="javascript:;"
+		  <button {...this.props}
 			role="button"
-			className={(this.props.className || '') + ' btn'} />
+			className={(this.props.className || '') + ' btn'}>
+				{this.props.children}
+			</button>
 		);
 	}
 });
@@ -106,9 +107,12 @@ var LocationViewer = React.createClass({
 	},
 	render: function()
 	{
+		var point = new GeoPoint(this.state.longitude, this.state.latitude);
 		return (
 			<div>
-				<h3>({this.state.latitude}, {this.state.longitude})</h3>				
+				<button className="btn btn-lg" type="button" onClick={(function(){window.location.href = "https://www.google.com/maps/place/"+this.state.latitude+"+"+this.state.longitude}).bind(this)}>
+					({point.getLatDeg()}, {point.getLonDeg()})
+				</button>
 			</div>
 			);
 	}
