@@ -118,14 +118,14 @@ var LocationViewer = React.createClass({
 						var d = R[unit] * c; // Distance in km
 						return d;
 					}
-					var distance = this.state.error === null || this.state.error.length === 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
+					var distance = this.state.error === null || this.state.error.length > 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
 						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.state.units);
 					var speed = 1000 * 3600 * this.state.distance / (Date.now() - this.state.time);
 					if (isNaN(speed))
 					{
 						speed = 0;
 					}
-					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude, time:Date.now(), speed: speed, error:""});
+					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude, time:Date.now(), distance: distance, speed: speed, error:""});
 				}).bind(this)
 				,
 				(function()
@@ -153,7 +153,7 @@ var LocationViewer = React.createClass({
 					({point.getLatDeg()}, {point.getLonDeg()})
 				</button>
 				<br />
-				<h3>Speed: {this.state.speed} {this.state.units}/hr</h3>
+				<h3>Speed: {this.state.speed} {this.state.units}/hr</h3>			
 				<BootstrapSwitch id="unit-changer" onChange={unitChanger} data-on-color="info" data-off-color="warning" data-on-text="miles" data-off-text="km" data-label-text="units"/>
 			</div>
 			);
@@ -172,9 +172,11 @@ var ParallaxBackground = React.createClass({
 		$(".background").width(window.innerWidth*1.3);
 	},
 	componentDidMount: function() {
+		//this.parallax = new Parallax(document.getElementById('scene'))
+		//this.parallax.disable();
 		this.handleResize();
 		window.addEventListener('resize', this.handleResize);
-		setTimeout(function(){var parallax = new Parallax(document.getElementById('scene'))}, 5000);
+		setTimeout(function(){ this.parallax = new Parallax(document.getElementById('scene')); }, 5000);
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.handleResize);
