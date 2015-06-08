@@ -3,10 +3,10 @@
 var BootstrapButton = React.createClass({
 	render: function() {
 		return (
-		  <button {...this.props}
-			role="button"
-			className={(this.props.className || '') + ' btn'}>
-				{this.props.children}
+			<button {...this.props}
+				role="button"
+				className={(this.props.className || '') + ' btn'}>
+					{this.props.children}
 			</button>
 		);
 	}
@@ -21,15 +21,15 @@ var BootstrapNavbar = React.createClass({
 						<button className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 							aria-expanded="false" aria-controls="navbar">
 							<span className="sr-only">Toggle navigation</span>
-				            <span className="icon-bar"></span>
-				            <span className="icon-bar"></span>
-				            <span className="icon-bar"></span>
-			            </button>
-		            	<a className="navbar-brand" href="#">{this.props.name}</a>
-		            </div>
-		            <div id="navbar" className="navbar-collapse collapse">
-		            	<ul className="nav navbar-nav">
-		            		{this.props.children}
+							<span className="icon-bar"></span>
+							<span className="icon-bar"></span>
+							<span className="icon-bar"></span>
+						</button>
+						<a className="navbar-brand" href="#">{this.props.name}</a>
+					</div>
+					<div id="navbar" className="navbar-collapse collapse">
+						<ul className="nav navbar-nav">
+							{this.props.children}
 						</ul>					
 					</div>
 				</div>
@@ -123,7 +123,7 @@ var ParallaxBackground = React.createClass({
 		return {width: window.innerWidth, height: window.innerHeight};
 	},
 	handleResize: function(e) {
-    	this.setState({windowWidth: window.innerWidth});
+		this.setState({windowWidth: window.innerWidth});
 	},
 	componentDidMount: function() {
 		var scene = document.getElementById("scene");
