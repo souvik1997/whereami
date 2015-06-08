@@ -165,16 +165,16 @@ var ParallaxBackground = React.createClass({
 		return {width: window.innerWidth, height: window.innerHeight};
 	},
 	handleResize: function(e) {
-		this.setState({windowWidth: window.innerWidth});
-	},
-	componentDidMount: function() {
 		var scene = document.getElementById("scene");
 		scene.style.width = window.innerWidth + 'px';
 		scene.style.height = window.innerHeight + 'px';
 		$(".background").height(window.innerHeight*1.3);
 		$(".background").width(window.innerWidth*1.3);
+	},
+	componentDidMount: function() {		
 		var scene = document.getElementById('scene');
 		var parallax = new Parallax(scene);
+		this.handleResize();
 		window.addEventListener('resize', this.handleResize);
 	},
 	componentWillUnmount: function() {
@@ -199,7 +199,7 @@ $(document).ready(function(){
 	React.render(
 		<div>
 			<BootstrapNavbar name="Where am I?">
-				<BootstrapNavbarItem text="Github" />
+				<BootstrapNavbarItem text="Github" clickHandler={function(){ window.location = "https://github.com/souvik1997/whereami";}}/>
 			</BootstrapNavbar>		
 			<ParallaxBackground />
 			<BootstrapContainer>
