@@ -15,8 +15,8 @@ var BootstrapButton = React.createClass({
 var BootstrapNavbar = React.createClass({
 	render: function() {
 		return (
-			<nav className='navbar navbar-default navbar-static-top'>
-				<div className='container'>
+			<nav className='navbar navbar-default navbar-fixed-top'>
+				<div className='container-fluid'>
 					<div className="navbar-header">
 						<button className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 							aria-expanded="false" aria-controls="navbar">
@@ -27,7 +27,7 @@ var BootstrapNavbar = React.createClass({
 						</button>
 						<a className="navbar-brand" href="#">{this.props.name}</a>
 					</div>
-					<div id="navbar" className="navbar-collapse collapse">
+					<div id="navbar" className="collapse navbar-collapse">
 						<ul className="nav navbar-nav">
 							{this.props.children}
 						</ul>					
@@ -113,14 +113,14 @@ var LocationViewer = React.createClass({
 						var dLon = toRad(lon2-lon1); 
 						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
 							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
-							Math.sin(dLon/2) * Math.sin(dLon/2); 
-						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+							Math.sin(dLon/2) * Math.sin(dLon/2);
+						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 						var d = R[unit] * c; // Distance in km
 						return d;
 					}
 					var distance = this.state.error === null || this.state.error.length === 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
 						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.state.units);
-					var speed = 1000/3600 * this.state.distance / (Date.now() - this.state.time);
+					var speed = 1000 * 3600 * this.state.distance / (Date.now() - this.state.time);
 					if (isNaN(speed))
 					{
 						speed = 0;
@@ -185,8 +185,8 @@ var ParallaxBackground = React.createClass({
 		
 		return (
 			<div className="absolute-div">
-				<ul id="scene" className="scene unselectable">				
-					<li className="layer" data-depth="0.30">
+				<ul id="scene" className="scene">				
+					<li className="layer" data-depth="0.90">
 						<div className="background">
 						</div>
 					</li>
@@ -212,4 +212,7 @@ $(document).ready(function(){
 		,
 		document.getElementById("whereami")
 	);
+});
+$(document).bind('touchmove', function(e) {
+	e.preventDefault();
 });
