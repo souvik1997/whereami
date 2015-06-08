@@ -69,7 +69,7 @@ var BootstrapJumbotron = React.createClass({
 	render: function()
 	{
 		return (
-			<div className="jumbotron">
+			<div className="jumbotron vertical-align">
 				{this.props.children}
 			</div>
 		);
@@ -117,19 +117,47 @@ var LocationViewer = React.createClass({
 			);
 	}
 })
-React.render(
-	<div>
-		<BootstrapNavbar name="Where am I?">
-			<BootstrapNavbarItem text="Github" />
-		</BootstrapNavbar>
-		<BootstrapContainer>
-			<BootstrapJumbotron width="12">
-				<LocationViewer />
-			</BootstrapJumbotron>
-		</BootstrapContainer>
-	</div>
+$(document).ready(function(){
+	React.render(
+		<div>
+			<BootstrapNavbar name="Where am I?">
+				<BootstrapNavbarItem text="Github" />
+			</BootstrapNavbar>		
+			<div className="absolute-div">
+				<ul id="scene" className="scene unselectable">				
+					<li className="layer" data-depth="0.30">
+						<div className="background">
+						</div>
+					</li>
+				</ul>	
+			</div>
+			<BootstrapContainer>
+				<BootstrapJumbotron width="12">
+					<LocationViewer />
+				</BootstrapJumbotron>
+			</BootstrapContainer>
+		</div>
+		
+		,
+		document.getElementById("whereami")
+	);
+	var scene = document.getElementById('scene');
+	var parallax = new Parallax(scene);
 	
-	,
-	document.getElementById("whereami")
-);
+	var resize = function() {
+		scene.style.width = window.innerWidth + 'px';
+		scene.style.height = window.innerHeight + 'px';
+		$(".background").height(window.innerHeight*1.3);
+		$(".background").width(window.innerWidth*1.3);
+		if (!$prompt.hasClass('hide')) {
+			if (window.innerWidth < 600) {
+				$toggle.addClass('hide');
+			} else {
+				$toggle.removeClass('hide');
+			}
+		}
+	};
+	resize();
+	window.onresize(resize);
 
+});
