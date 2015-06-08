@@ -106,20 +106,20 @@ var LocationViewer = React.createClass({
 			this.watch = window.navigator.geolocation.watchPosition(
 				(function(position)
 				{
-					var distanceCalc = function (lon1, lat1, lon2, lat2, unit) {
+					var distanceCalc = function (lon1, lat1, lon2, lat2) {
 						var toRad = function(a) { return a * Math.PI / 180};
-						var R = {km: 6371, mi: 3959}; // Radius of the earth 
+						var R = {km: 6371}; // Radius of the earth in km
 						var dLat = toRad(lat2-lat1);		// Javascript functions in radians
 						var dLon = toRad(lon2-lon1); 
 						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
 							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
 							Math.sin(dLon/2) * Math.sin(dLon/2);
 						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-						var d = R[unit] * c; // Distance in km
+						var d = R["km"] * c; // Distance in km
 						return d;
 					}
 					var distance = this.state.error === null || this.state.error.length > 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
-						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.state.units);
+						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude);
 					var speed = 1000 * 3600 * this.state.distance / (Date.now() - this.state.time);
 					if (isNaN(speed))
 					{
@@ -147,13 +147,18 @@ var LocationViewer = React.createClass({
 	{		
 		var point = new GeoPoint(this.state.longitude, this.state.latitude);
 		var unitChanger = (function(){ this.setState({units: this.state.units === "mi" ? "km" : "mi"})}).bind(this);
+		var kmspeed = this.state.speed;
+		var mispeed = kmspeed * 0.62137119;
+		var displayedspeed = Math.round(kmspeed*100)/100;
+		if (this.state.units == "mi")
+			displayedspeed = Math.round(mispeed*100)/100;
 		return (
 			<div>
 				<button className="btn btn-lg" type="button" onClick={(function(){window.location.href = "https://www.google.com/maps/place/"+this.state.latitude+"+"+this.state.longitude}).bind(this)}>
 					({point.getLatDeg()}, {point.getLonDeg()})
 				</button>
 				<br />
-				<h3>Speed: {this.state.speed} {this.state.units}/hr</h3>			
+				<h3>Speed: {displayedspeed} {this.state.units}/hr</h3>			
 				<BootstrapSwitch id="unit-changer" onChange={unitChanger} data-on-color="info" data-off-color="warning" data-on-text="miles" data-off-text="km" data-label-text="units"/>
 			</div>
 			);
