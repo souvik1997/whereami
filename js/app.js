@@ -65,6 +65,24 @@ var BootstrapContainer = React.createClass({
 		);
 	}
 });
+var BootstrapSwitch = React.createClass({
+	componentDidMount: function()
+	{
+		$("#"+this.props.id).bootstrapSwitch();
+		$("#"+this.props.id).on('switchChange.bootstrapSwitch', this.onChange);
+	},
+	onChange: function()
+	{
+		if (this.props.onChange != null)
+			this.props.onChange();
+	},
+	render: function()
+	{
+		return (
+			<input type="checkbox" {...this.props} checked/>
+		);
+	}
+});
 var BootstrapJumbotron = React.createClass({
 	render: function()
 	{
@@ -79,8 +97,8 @@ var LocationViewer = React.createClass({
 	getInitialState: function()
 	{
 		if (window.navigator.geolocation.getCurrentPosition == null || window.navigator.geolocation.watchPosition == null)
-			return {error: "not supported"};
-		return {error: "initializing"};
+			return {error: "not supported", units: this.props.units};
+		return {error: "initializing", units: this.props.units};
 	},
 	componentDidMount: function()
 	{
@@ -101,8 +119,13 @@ var LocationViewer = React.createClass({
 						return d;
 					}
 					var distance = this.state.error === null || this.state.error.length === 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
-					distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.props.units);
-					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude, time:Date.now(), distance: distance});
+						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.state.units);
+					var speed = 1000/3600 * this.state.distance / (Date.now() - this.state.time);
+					if (isNaN(speed))
+					{
+						speed = 0;
+					}
+					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude, time:Date.now(), speed: speed, error:""});
 				}).bind(this)
 				,
 				(function()
@@ -114,6 +137,7 @@ var LocationViewer = React.createClass({
 					maximumAge: 30000,
 					timeout: 27000
 				});
+		$("[name='unit-checkbox']").bootstrapSwitch();
 	},
 	componentWillUnmount: function()
 	{
@@ -122,14 +146,15 @@ var LocationViewer = React.createClass({
 	render: function()
 	{		
 		var point = new GeoPoint(this.state.longitude, this.state.latitude);
-		var speed = this.state.distance == 0 ? 0 : 1000/3600 * this.state.distance / (Date.now() - this.state.time);
+		var unitChanger = (function(){ this.setState({units: this.state.units === "mi" ? "km" : "mi"})}).bind(this);
 		return (
 			<div>
 				<button className="btn btn-lg" type="button" onClick={(function(){window.location.href = "https://www.google.com/maps/place/"+this.state.latitude+"+"+this.state.longitude}).bind(this)}>
 					({point.getLatDeg()}, {point.getLonDeg()})
 				</button>
 				<br />
-				<h3>Speed: {speed} {this.props.units}/hr</h3>
+				<h3>Speed: {this.state.speed} {this.state.units}/hr</h3>
+				<BootstrapSwitch id="unit-changer" onChange={unitChanger} data-on-color="info" data-off-color="warning" data-on-text="miles" data-off-text="km" data-label-text="units"/>
 			</div>
 			);
 	}
