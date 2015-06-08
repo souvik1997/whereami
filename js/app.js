@@ -171,11 +171,10 @@ var ParallaxBackground = React.createClass({
 		$(".background").height(window.innerHeight*1.3);
 		$(".background").width(window.innerWidth*1.3);
 	},
-	componentDidMount: function() {		
-		var scene = document.getElementById('scene');
-		var parallax = new Parallax(scene);
+	componentDidMount: function() {
 		this.handleResize();
 		window.addEventListener('resize', this.handleResize);
+		setTimeout(function(){var parallax = new Parallax(document.getElementById('scene'))}, 5000);
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.handleResize);
