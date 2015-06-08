@@ -116,13 +116,32 @@ var LocationViewer = React.createClass({
 			</div>
 			);
 	}
-})
-$(document).ready(function(){
-	React.render(
-		<div>
-			<BootstrapNavbar name="Where am I?">
-				<BootstrapNavbarItem text="Github" />
-			</BootstrapNavbar>		
+});
+var ParallaxBackground = React.createClass({
+	getInitialState: function()
+	{
+		return {width: window.innerWidth, height: window.innerHeight};
+	},
+	handleResize: function(e) {
+    	this.setState({windowWidth: window.innerWidth});
+	},
+	componentDidMount: function() {
+		var scene = document.getElementById("scene");
+		scene.style.width = window.innerWidth + 'px';
+		scene.style.height = window.innerHeight + 'px';
+		$(".background").height(window.innerHeight*1.3);
+		$(".background").width(window.innerWidth*1.3);
+		var scene = document.getElementById('scene');
+		var parallax = new Parallax(scene);
+		window.addEventListener('resize', this.handleResize);
+	},
+	componentWillUnmount: function() {
+		window.removeEventListener('resize', this.handleResize);
+	},
+	render: function()
+	{
+		
+		return (
 			<div className="absolute-div">
 				<ul id="scene" className="scene unselectable">				
 					<li className="layer" data-depth="0.30">
@@ -131,6 +150,16 @@ $(document).ready(function(){
 					</li>
 				</ul>	
 			</div>
+		);
+	}
+});
+$(document).ready(function(){
+	React.render(
+		<div>
+			<BootstrapNavbar name="Where am I?">
+				<BootstrapNavbarItem text="Github" />
+			</BootstrapNavbar>		
+			<ParallaxBackground />
 			<BootstrapContainer>
 				<BootstrapJumbotron width="12">
 					<LocationViewer />
@@ -141,23 +170,4 @@ $(document).ready(function(){
 		,
 		document.getElementById("whereami")
 	);
-	var scene = document.getElementById('scene');
-	var parallax = new Parallax(scene);
-	
-	var resize = function() {
-		scene.style.width = window.innerWidth + 'px';
-		scene.style.height = window.innerHeight + 'px';
-		$(".background").height(window.innerHeight*1.3);
-		$(".background").width(window.innerWidth*1.3);
-		if (!$prompt.hasClass('hide')) {
-			if (window.innerWidth < 600) {
-				$toggle.addClass('hide');
-			} else {
-				$toggle.removeClass('hide');
-			}
-		}
-	};
-	resize();
-	window.onresize(resize);
-
 });
