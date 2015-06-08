@@ -79,8 +79,8 @@ var LocationViewer = React.createClass({
 	getInitialState: function()
 	{
 		if (window.navigator.geolocation.getCurrentPosition == null || window.navigator.geolocation.watchPosition == null)
-			return {latitude: 0, longitude: 0, error: "not supported"};
-		return {latitude: 0, longitude: 0, error: "initializing"};
+			return {error: "not supported"};
+		return {error: "initializing"};
 	},
 	componentDidMount: function()
 	{
@@ -88,12 +88,26 @@ var LocationViewer = React.createClass({
 			this.watch = window.navigator.geolocation.watchPosition(
 				(function(position)
 				{
-					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude});
+					var distanceCalc = function (lon1, lat1, lon2, lat2, unit) {
+						var toRad = function(a) { return a * Math.PI / 180};
+						var R = {km: 6371, mi: 3959}; // Radius of the earth 
+						var dLat = toRad(lat2-lat1);		// Javascript functions in radians
+						var dLon = toRad(lon2-lon1); 
+						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+							Math.sin(dLon/2) * Math.sin(dLon/2); 
+						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+						var d = R[unit] * c; // Distance in km
+						return d;
+					}
+					var distance = this.state.error === null || this.state.error.length === 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
+					distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude, this.props.units);
+					this.setState({latitude: position.coords.latitude, longitude: position.coords.longitude, time:Date.now(), distance: distance});
 				}).bind(this)
 				,
 				(function()
 				{
-					this.setState({latitude: 0, longitude: 0, error: "error"});
+					this.setState({error: "error"});
 				}).bind(this),
 				{
 					enableHighAccuracy: true,
@@ -106,13 +120,16 @@ var LocationViewer = React.createClass({
 		window.navigator.geolocation.clearWatch(this.watch);
 	},
 	render: function()
-	{
+	{		
 		var point = new GeoPoint(this.state.longitude, this.state.latitude);
+		var speed = this.state.distance == 0 ? 0 : 1000/3600 * this.state.distance / (Date.now() - this.state.time);
 		return (
 			<div>
 				<button className="btn btn-lg" type="button" onClick={(function(){window.location.href = "https://www.google.com/maps/place/"+this.state.latitude+"+"+this.state.longitude}).bind(this)}>
 					({point.getLatDeg()}, {point.getLonDeg()})
 				</button>
+				<br />
+				<h3>Speed: {speed} {this.props.units}/hr</h3>
 			</div>
 			);
 	}
@@ -148,7 +165,7 @@ var ParallaxBackground = React.createClass({
 						<div className="background">
 						</div>
 					</li>
-				</ul>	
+				</ul>
 			</div>
 		);
 	}
@@ -162,7 +179,7 @@ $(document).ready(function(){
 			<ParallaxBackground />
 			<BootstrapContainer>
 				<BootstrapJumbotron width="12">
-					<LocationViewer />
+					<LocationViewer units="mi"/>
 				</BootstrapJumbotron>
 			</BootstrapContainer>
 		</div>
