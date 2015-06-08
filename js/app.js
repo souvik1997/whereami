@@ -30,7 +30,7 @@ var BootstrapNavbar = React.createClass({
 					<div id="navbar" className="collapse navbar-collapse">
 						<ul className="nav navbar-nav">
 							{this.props.children}
-						</ul>					
+						</ul>
 					</div>
 				</div>
 			</nav>
@@ -110,15 +110,15 @@ var LocationViewer = React.createClass({
 						var toRad = function(a) { return a * Math.PI / 180};
 						var R = {km: 6371}; // Radius of the earth in km
 						var dLat = toRad(lat2-lat1);		// Javascript functions in radians
-						var dLon = toRad(lon2-lon1); 
+						var dLon = toRad(lon2-lon1);
 						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
+							Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
 							Math.sin(dLon/2) * Math.sin(dLon/2);
 						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 						var d = R["km"] * c; // Distance in km
 						return d;
 					}
-					var distance = this.state.error === null || this.state.error.length > 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 : 
+					var distance = this.state.error === null || this.state.error.length > 0 || this.state.longitude == undefined || this.state.latitude == undefined ? 0 :
 						distanceCalc(position.coords.longitude, position.coords.latitude, this.state.longitude, this.state.latitude);
 					var speed = 1000 * 3600 * this.state.distance / (Date.now() - this.state.time);
 					if (isNaN(speed))
@@ -144,7 +144,7 @@ var LocationViewer = React.createClass({
 		window.navigator.geolocation.clearWatch(this.watch);
 	},
 	render: function()
-	{		
+	{
 		var point = new GeoPoint(this.state.longitude, this.state.latitude);
 		var unitChanger = (function(){ this.setState({units: this.state.units === "mi" ? "km" : "mi"})}).bind(this);
 		var kmspeed = this.state.speed;
@@ -158,7 +158,7 @@ var LocationViewer = React.createClass({
 					({point.getLatDeg()}, {point.getLonDeg()})
 				</button>
 				<br />
-				<h3>Speed: {displayedspeed} {this.state.units}/hr</h3>			
+				<h3>Speed: {displayedspeed} {this.state.units}/hr</h3>
 				<BootstrapSwitch id="unit-changer" onChange={unitChanger} data-on-color="info" data-off-color="warning" data-on-text="miles" data-off-text="km" data-label-text="units"/>
 			</div>
 			);
@@ -188,10 +188,10 @@ var ParallaxBackground = React.createClass({
 	},
 	render: function()
 	{
-		
+
 		return (
 			<div className="absolute-div">
-				<ul id="scene" className="scene">				
+				<ul id="scene" className="scene">
 					<li className="layer" data-depth="0.90">
 						<div className="background">
 						</div>
@@ -206,7 +206,7 @@ $(document).ready(function(){
 		<div>
 			<BootstrapNavbar name="Where am I?">
 				<BootstrapNavbarItem text="Github" clickHandler={function(){ window.location = "https://github.com/souvik1997/whereami";}}/>
-			</BootstrapNavbar>		
+			</BootstrapNavbar>
 			<ParallaxBackground />
 			<BootstrapContainer>
 				<BootstrapJumbotron width="12">
@@ -214,7 +214,7 @@ $(document).ready(function(){
 				</BootstrapJumbotron>
 			</BootstrapContainer>
 		</div>
-		
+
 		,
 		document.getElementById("whereami")
 	);
