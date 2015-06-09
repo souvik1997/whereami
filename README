@@ -1,0 +1,3 @@
+A simple webapp to display your location and speed.
+
+This was made as an experiment to try using React (https://facebook.github.io/react/) and to use the new geolocation APIs in HTML5. This is also the first project I have made that uses bower to manage dependencies.
